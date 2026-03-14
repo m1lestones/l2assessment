@@ -26,23 +26,28 @@ function AnalyzePage() {
 
     setIsLoading(true)
     setResults(null)
-    
+
     try {
-      // Run categorization (LLM call)
-      const { category, reasoning } = await categorizeMessage(message)
-      
-      // Calculate urgency (rule-based)
-      const urgency = calculateUrgency(message)
-      
+      // Run categorization and urgency calculation in parallel (both are LLM calls)
+      const [
+        { category, reasoning: categoryReasoning },
+        { urgency, reasoning: urgencyReasoning, confidence }
+      ] = await Promise.all([
+        categorizeMessage(message),
+        calculateUrgency(message)
+      ]);
+
       // Get recommended action (template-based)
-      const recommendedAction = getRecommendedAction(category)
-      
+      const recommendedAction = getRecommendedAction(category, urgency)
+
       const analysisResult = {
         message,
         category,
         urgency,
+        urgencyConfidence: confidence,
+        urgencyReasoning,
         recommendedAction,
-        reasoning,
+        reasoning: categoryReasoning,
         timestamp: new Date().toISOString()
       }
 
@@ -139,13 +144,25 @@ function AnalyzePage() {
 
               <div>
                 <div className="text-sm font-semibold text-gray-600 mb-1">Urgency Level</div>
-                <div className={`inline-block px-4 py-2 rounded-lg font-semibold ${
-                  results.urgency === 'High' ? 'bg-red-200 text-red-900' :
-                  results.urgency === 'Medium' ? 'bg-yellow-200 text-yellow-900' :
-                  'bg-green-200 text-green-900'
-                }`}>
-                  {results.urgency}
+                <div className="flex items-center gap-3">
+                  <div className={`inline-block px-4 py-2 rounded-lg font-semibold ${
+                    results.urgency === 'High' ? 'bg-red-200 text-red-900' :
+                    results.urgency === 'Medium' ? 'bg-yellow-200 text-yellow-900' :
+                    'bg-green-200 text-green-900'
+                  }`}>
+                    {results.urgency}
+                  </div>
+                  {results.urgencyConfidence && (
+                    <div className="text-sm text-gray-600">
+                      Confidence: <span className="font-semibold">{results.urgencyConfidence}%</span>
+                    </div>
+                  )}
                 </div>
+                {results.urgencyReasoning && (
+                  <div className="mt-2 text-sm text-gray-600 italic">
+                    {results.urgencyReasoning}
+                  </div>
+                )}
               </div>
 
               <div>

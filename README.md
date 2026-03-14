@@ -1,8 +1,24 @@
 # Customer Inbox Triage App
 
+## 🎯 Improvements Implemented
+
+This is an improved version of the Customer Inbox Triage app with significant enhancements to urgency scoring and recommendation systems.
+
+### Key Improvements
+- ✅ **LLM-Based Urgency Scoring**: Replaced naive rule-based system with semantic analysis
+- ✅ **Context-Aware Recommendations**: Recommendations now consider both category AND urgency
+- ✅ **Confidence Scores**: Added confidence metrics for quality control
+- ✅ **Better Accuracy**: Critical issues now properly flagged as High urgency
+
+📖 **See [IMPROVEMENTS.md](./IMPROVEMENTS.md) for detailed analysis**
+📊 **See [ANALYSIS.md](./ANALYSIS.md) for problem identification**
+🧪 **See [TESTING.md](./TESTING.md) for comprehensive test cases**
+
+---
+
 ## Overview
 
-The Customer Inbox Triage app is a lightweight AI-powered tool that helps classify customer support messages and recommend actions. It uses Groq AI to categorize messages, applies rule-based urgency scoring, and suggests next steps based on predefined templates.
+The Customer Inbox Triage app is a lightweight AI-powered tool that helps classify customer support messages and recommend actions. It uses Groq AI for both categorization and semantic urgency analysis, providing context-aware recommendations based on message content.
 
 ## Problem Statement
 
